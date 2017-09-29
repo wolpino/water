@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+    <h6><a href="{% url 'peace' %}">Log out</a></h6>        
+    <h1>Travels</h1>
+    <h3>Hello {{ request.session.first_name }}!</h3>   
+    
+    <p>Your Trip Schedules</p>
+    <table>
+        <tr>
+            <th>Destination</th>
+            <th>Travel Start Date</th>
+            <th>Travel End Date</th>                                       
+			<th>Plan</th>
+        </tr>
+    </table>
+    {% for trip in joined_trips %}
+    <table>
+        <tr>
+            <td><a href="{% url 'tripinfo' number=trip.id %}">{{ trip.destination}}</a></td>
+            <td>{{ trip.start_date}}</td>                      
+            <td>{{ trip.end_date}}</td>                    
+            <td>{{ trip.desc}}</td>
+        </tr>
+	
+    {% endfor %}
+    </table>
+        
+    <p>Other User's Travel Plans</p>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Destination</th>            
+            <th>Travel Start Date</th>
+            <th>Travel End Date</th>    
+			<th>Do you want to join?</th>               
+        </tr>
+    </table>
+        {% for trip in all_trips %}
+            {% for user in all_users %}
+    <table>
+        <tr>
+            {% if user.id == trip.trip_planner_id %}
+            <td>{{ user.first_name}} {{ user.last_name}} </td>           
+            <td><a href="{% url 'tripinfo' number=trip.id %}">{{ trip.destination}}</a></td>           
+            <td>{{ trip.start_date}}</td>                      
+            <td>{{ trip.end_date}}</td>
+			<td><a href="{% url 'join' number=trip.id %}">Join</a></td>               
+        </tr>
+        {% endif %}
+			{% endfor %}
+            
+			{% empty %}
+			<p>no users</p>
+            {% endfor %}
+            
+    </table>
+    <h6><a href="{% url 'addtrip' %}">Add Travel Plan</a></h6>        
+    
+</body>
+</html>
